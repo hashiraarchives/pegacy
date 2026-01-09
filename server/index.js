@@ -248,7 +248,9 @@ const PRICING = {
 
 // Valid promo codes (server-side validation)
 const PROMO_CODES = {
-    'VOKAISTHEBEST': { discount: 5, type: 'percent', description: '5% off' }
+    'VOKAISTHEBEST': { discount: 5, type: 'percent', description: '5% off' },
+    'PEGACYSHOP1': { discount: 10, type: 'percent', description: '10% off' },
+    'PEGACYFREE_VOKA': { discount: 100, type: 'percent', description: '100% off' }
 };
 
 // Validate promo code
