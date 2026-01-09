@@ -242,7 +242,7 @@ function cleanupExpiredSessions() {
 const PRICING = {
     BASE_PRICE: 129,           // $129 per figurine
     SHIPPING_SG: 10,           // Singapore shipping
-    SHIPPING_WORLD: 15,        // Worldwide shipping
+    SHIPPING_WORLD: 30,        // Worldwide shipping
     DISCOUNT_PERCENT: 15       // 15% off for 2+ figurines
 };
 
@@ -271,14 +271,16 @@ function calculateOrderTotal(quantity, shippingLocation, promoCode = null) {
         quantityDiscount = Math.round(subtotal * PRICING.DISCOUNT_PERCENT / 100);
     }
 
-    // Promo code discount (applied after quantity discount)
+    // Calculate total before promo (subtotal - quantity discount + shipping)
+    const totalBeforePromo = subtotal - quantityDiscount + shipping;
+
+    // Promo code discount (applied to entire order including shipping)
     let promoDiscount = 0;
     let validPromo = null;
     if (promoCode) {
         validPromo = validatePromoCode(promoCode);
         if (validPromo && validPromo.type === 'percent') {
-            const afterQuantityDiscount = subtotal - quantityDiscount;
-            promoDiscount = Math.round(afterQuantityDiscount * validPromo.discount / 100);
+            promoDiscount = Math.round(totalBeforePromo * validPromo.discount / 100);
         }
     }
 
@@ -288,7 +290,7 @@ function calculateOrderTotal(quantity, shippingLocation, promoCode = null) {
         promoDiscount,
         promoCode: validPromo ? validPromo.code : null,
         shipping,
-        total: subtotal - quantityDiscount - promoDiscount + shipping
+        total: totalBeforePromo - promoDiscount
     };
 }
 

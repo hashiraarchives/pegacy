@@ -92,6 +92,33 @@
             animation: spin 1s linear infinite;
         }
 
+        /* Confetti animation for success page */
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            opacity: 0;
+            animation: confetti-fall 3s ease-in-out infinite;
+        }
+        .confetti-piece:nth-child(odd) {
+            background: var(--warm-gold);
+            border-radius: 50%;
+        }
+        .confetti-piece:nth-child(even) {
+            background: var(--warm-orange);
+            transform: rotate(45deg);
+        }
+        .confetti-piece:nth-child(3n) {
+            background: #16a34a;
+            width: 8px;
+            height: 8px;
+        }
+        @keyframes confetti-fall {
+            0% { top: -10px; opacity: 1; transform: translateX(0) rotate(0deg); }
+            100% { top: 100vh; opacity: 0; transform: translateX(100px) rotate(720deg); }
+        }
+
         /* Polaroid effect - wider for transformation image */
         .polaroid-wide {
             background: white;
@@ -766,8 +793,8 @@
                     <div>
                         <label class="block text-sm font-bold mb-2" style="color: var(--deep-brown);">Shipping Location</label>
                         <select id="shipping-location" onchange="updateOrderSummary()" class="input-field">
-                            <option value="singapore">Singapore (~1 week) - $10</option>
-                            <option value="worldwide">Worldwide (~2 weeks) - $15</option>
+                            <option value="singapore">Singapore (~1 week) - $10 SGD</option>
+                            <option value="worldwide">Worldwide (~2 weeks) - $30 SGD</option>
                         </select>
                     </div>
                     <div>
@@ -849,14 +876,58 @@
     </div>
 
     <!-- ==================== SUCCESS VIEW ==================== -->
-    <div id="success-view" class="hidden-view fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center p-6 text-center">
-        <div class="w-28 h-28 rounded-full flex items-center justify-center text-5xl mb-8" style="background: rgba(34, 197, 94, 0.15);">
-            🎨
+    <div id="success-view" class="hidden-view fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 text-center overflow-y-auto" style="background: linear-gradient(135deg, var(--warm-cream) 0%, var(--soft-tan) 100%);">
+        <!-- Confetti animation -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+            <div class="confetti-piece" style="left: 10%; animation-delay: 0s;"></div>
+            <div class="confetti-piece" style="left: 20%; animation-delay: 0.5s;"></div>
+            <div class="confetti-piece" style="left: 30%; animation-delay: 0.2s;"></div>
+            <div class="confetti-piece" style="left: 40%; animation-delay: 0.7s;"></div>
+            <div class="confetti-piece" style="left: 50%; animation-delay: 0.1s;"></div>
+            <div class="confetti-piece" style="left: 60%; animation-delay: 0.6s;"></div>
+            <div class="confetti-piece" style="left: 70%; animation-delay: 0.3s;"></div>
+            <div class="confetti-piece" style="left: 80%; animation-delay: 0.8s;"></div>
+            <div class="confetti-piece" style="left: 90%; animation-delay: 0.4s;"></div>
         </div>
-        <h2 class="text-5xl font-bold serif mb-4" style="color: var(--deep-brown);">You're all set!</h2>
-        <p class="text-xl max-w-lg mb-2" style="color: rgba(74, 55, 40, 0.6);">Order <strong id="display-order-id" style="color: var(--warm-gold);">PGC-XXXXXX</strong></p>
-        <p class="text-lg max-w-lg mb-8" style="color: rgba(74, 55, 40, 0.6);">Our team is now reviewing your photos. You'll receive a digital proof within 48 hours.</p>
-        <button onclick="showLanding()" class="btn-primary">Back to Home</button>
+
+        <div class="relative z-10 max-w-xl mx-auto">
+            <!-- Celebration icon -->
+            <div class="w-32 h-32 rounded-full flex items-center justify-center text-6xl mb-6 mx-auto animate-bounce" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%); box-shadow: 0 20px 40px rgba(34, 197, 94, 0.2);">
+                🎉
+            </div>
+
+            <h2 class="text-4xl md:text-5xl font-bold serif mb-3" style="color: var(--deep-brown);">Thank You!</h2>
+            <p class="text-2xl font-medium mb-6" style="color: var(--warm-gold);">Your order is confirmed</p>
+
+            <div class="bg-white rounded-3xl p-6 mb-8 card-shadow">
+                <p class="text-sm uppercase tracking-widest mb-2" style="color: rgba(74, 55, 40, 0.5);">Order Number</p>
+                <p class="text-2xl font-bold serif mb-4" id="display-order-id" style="color: var(--warm-gold);">PGC-XXXXXX</p>
+                <div class="h-px w-full mb-4" style="background: var(--soft-tan);"></div>
+                <p class="text-base leading-relaxed" style="color: rgba(74, 55, 40, 0.7);">
+                    Our team is now reviewing your photos. You'll receive a <strong>digital proof within 48 hours</strong> for your approval before we begin crafting.
+                </p>
+            </div>
+
+            <!-- Contact Options -->
+            <div class="bg-white rounded-3xl p-6 mb-8 card-shadow">
+                <p class="font-bold mb-4" style="color: var(--deep-brown);">Have questions? Reach out anytime!</p>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="https://wa.me/6598180307" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-white transition hover:opacity-90" style="background: #25D366;">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        <span>WhatsApp Us</span>
+                    </a>
+                    <a href="mailto:pegacysg@gmail.com" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold transition hover:opacity-90" style="background: var(--soft-tan); color: var(--deep-brown);">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <span>Email Us</span>
+                    </a>
+                </div>
+            </div>
+
+            <button onclick="showLanding()" class="btn-gold inline-flex items-center gap-2">
+                <span>Back to Home</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            </button>
+        </div>
     </div>
 
     <script>
@@ -868,7 +939,7 @@
             API_BASE: '',
             PRICE: 129,
             SHIPPING_SG: 10,
-            SHIPPING_WORLD: 15,
+            SHIPPING_WORLD: 30,
             DISCOUNT_PERCENT: 15
         };
 
@@ -982,34 +1053,36 @@
             if (qty >= 2) {
                 quantityDiscount = Math.round(subtotal * CONFIG.DISCOUNT_PERCENT / 100);
                 document.getElementById('discount-row').classList.remove('hidden');
-                document.getElementById('discount-display').textContent = `-$${quantityDiscount}`;
+                document.getElementById('discount-display').textContent = `-$${quantityDiscount} SGD`;
             } else {
                 document.getElementById('discount-row').classList.add('hidden');
             }
 
-            // Promo code discount
+            // Calculate subtotal after quantity discount + shipping
+            const totalBeforePromo = subtotal - quantityDiscount + shipping;
+
+            // Promo code discount (applies to entire order including shipping)
             promoDiscount = 0;
             if (appliedPromoCode && PROMO_CODES[appliedPromoCode]) {
                 const promo = PROMO_CODES[appliedPromoCode];
-                const afterQuantityDiscount = subtotal - quantityDiscount;
                 if (promo.type === 'percent') {
-                    promoDiscount = Math.round(afterQuantityDiscount * promo.discount / 100);
+                    promoDiscount = Math.round(totalBeforePromo * promo.discount / 100);
                 }
                 document.getElementById('promo-discount-row').classList.remove('hidden');
                 document.getElementById('promo-code-display').textContent = appliedPromoCode;
-                document.getElementById('promo-discount-display').textContent = `-$${promoDiscount}`;
+                document.getElementById('promo-discount-display').textContent = `-$${promoDiscount} SGD`;
             } else {
                 document.getElementById('promo-discount-row').classList.add('hidden');
             }
 
-            currentTotal = subtotal - quantityDiscount - promoDiscount + shipping;
+            currentTotal = totalBeforePromo - promoDiscount;
 
             document.getElementById('qty-display').textContent = qty;
-            document.getElementById('subtotal-display').textContent = `$${subtotal}`;
-            document.getElementById('shipping-display').textContent = `$${shipping}`;
-            document.getElementById('total-display').textContent = `$${currentTotal}`;
-            document.getElementById('final-total-display').textContent = `$${currentTotal}`;
-            document.getElementById('btn-pay-text').textContent = `Pay $${currentTotal}`;
+            document.getElementById('subtotal-display').textContent = `$${subtotal} SGD`;
+            document.getElementById('shipping-display').textContent = `$${shipping} SGD`;
+            document.getElementById('total-display').textContent = `$${currentTotal} SGD`;
+            document.getElementById('final-total-display').textContent = `$${currentTotal} SGD`;
+            document.getElementById('btn-pay-text').textContent = `Pay $${currentTotal} SGD`;
         }
 
         // =============================================
