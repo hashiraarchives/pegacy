@@ -1077,6 +1077,11 @@
 
             currentTotal = totalBeforePromo - promoDiscount;
 
+            // Minimum $1 SGD for Stripe
+            if (currentTotal < 1) {
+                currentTotal = 1;
+            }
+
             document.getElementById('qty-display').textContent = qty;
             document.getElementById('subtotal-display').textContent = `$${subtotal} SGD`;
             document.getElementById('shipping-display').textContent = `$${shipping} SGD`;

@@ -284,13 +284,19 @@ function calculateOrderTotal(quantity, shippingLocation, promoCode = null) {
         }
     }
 
+    // Calculate final total (minimum $0.50 SGD for Stripe)
+    let total = totalBeforePromo - promoDiscount;
+    if (total < 1) {
+        total = 1; // Minimum $1 SGD for Stripe (50 cents minimum, but $1 is safer)
+    }
+
     return {
         subtotal,
         quantityDiscount,
         promoDiscount,
         promoCode: validPromo ? validPromo.code : null,
         shipping,
-        total: totalBeforePromo - promoDiscount
+        total
     };
 }
 
