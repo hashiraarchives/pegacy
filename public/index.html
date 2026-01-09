@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pegacy | Custom 3D Pet Figurines - Capture Your Love</title>
+    <meta name="description" content="Transform your beloved pet into a stunning 7cm 3D printed figurine. State-of-the-art technology meets artisan craftsmanship for an exact replica of your best friend.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐕</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <style>
+        :root {
+            --warm-cream: #FDFCF8;
+            --warm-gold: #C5A059;
+            --deep-brown: #4A3728;
+            --soft-tan: #F5E6D3;
+            --warm-orange: #E6A15C;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--warm-cream);
+            color: var(--deep-brown);
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Hero gradient background */
+        .hero-gradient {
+            background: linear-gradient(rgba(253, 252, 248, 0.92), rgba(253, 252, 248, 0.88)),
+                        url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Card shadows */
+        .card-shadow {
+            box-shadow: 0 10px 40px -10px rgba(74, 55, 40, 0.15);
+        }
+
+        .card-shadow-lg {
+            box-shadow: 0 25px 60px -15px rgba(74, 55, 40, 0.2);
+        }
+
+        .gold-glow {
+            box-shadow: 0 0 40px rgba(197, 160, 89, 0.25);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.15); }
+        }
+
+        .sparkle-anim {
+            animation: pulse-soft 3s infinite ease-in-out;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Polaroid effect - wider for transformation image */
+        .polaroid-wide {
+            background: white;
+            padding: 8px 8px 24px 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .polaroid-wide:hover {
+            transform: rotate(0deg) scale(1.05) !important;
+            z-index: 50;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.18);
+        }
+
+        /* Stripe Elements */
+        .StripeElement {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--soft-tan);
+            border-radius: 0.75rem;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .StripeElement--focus {
+            border-color: var(--warm-gold);
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15);
+        }
+
+        .StripeElement--invalid {
+            border-color: #ef4444;
+        }
+
+        /* Hidden views */
+        .hidden-view { display: none !important; }
+
+        /* Step active state */
+        .step-active {
+            color: var(--warm-gold) !important;
+            border-bottom: 2px solid var(--warm-gold);
+        }
+
+        /* Button styles */
+        .btn-primary {
+            background-color: var(--deep-brown);
+            color: white;
+            padding: 1.25rem 3rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 1.125rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px -10px rgba(74, 55, 40, 0.4);
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--warm-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px -10px rgba(74, 55, 40, 0.5);
+        }
+
+        .btn-gold {
+            background-color: var(--warm-gold);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px -8px rgba(197, 160, 89, 0.5);
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-gold:hover {
+            background-color: #b08d4a;
+            transform: translateY(-1px);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--warm-cream); }
+        ::-webkit-scrollbar-thumb { background: var(--soft-tan); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--warm-gold); }
+
+        /* Input styles */
+        .input-field {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--soft-tan);
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            outline: none;
+            background: white;
+        }
+
+        .input-field:focus {
+            border-color: var(--warm-gold);
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15);
+        }
+
+        .input-field::placeholder {
+            color: #a89b8c;
+        }
+
+        /* Initial avatar like Google */
+        .avatar-initial {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+        /* Discount badge */
+        .discount-badge {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- ==================== LANDING PAGE VIEW ==================== -->
+    <div id="landing-view">
+
+        <!-- Navigation -->
+        <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b" style="border-color: rgba(245, 230, 211, 0.5);">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                <div onclick="showLanding()" class="flex flex-col cursor-pointer hover:opacity-80 transition-opacity">
+                    <div class="text-3xl font-bold serif tracking-tight leading-none" style="color: var(--warm-gold);">Pegacy</div>
+                    <div class="text-[9px] uppercase tracking-[0.3em] font-semibold opacity-70 mt-0.5" style="color: var(--warm-gold);">Capture Your Love</div>
+                </div>
+                <div class="hidden md:flex space-x-10 font-medium text-sm" style="color: var(--deep-brown);">
+                    <a href="#how" class="hover:opacity-70 transition">How it Works</a>
+                    <a href="#gallery" class="hover:opacity-70 transition">Gallery</a>
+                    <a href="#reviews" class="hover:opacity-70 transition">Reviews</a>
+                    <a href="#faq" class="hover:opacity-70 transition">FAQ</a>
+                </div>
+                <a href="#order" class="btn-gold text-sm">Create My Figurine</a>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="pt-28 pb-20 hero-gradient px-6 overflow-hidden">
+            <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                <!-- Left Content -->
+                <div class="space-y-8">
+                    <div class="flex items-center space-x-3">
+                        <span class="inline-block px-4 py-1.5 bg-white border rounded-full text-xs font-bold uppercase tracking-widest" style="color: var(--warm-gold); border-color: rgba(197, 160, 89, 0.3);">Exact Replica Technology</span>
+                        <span class="text-xl sparkle-anim">✨</span>
+                    </div>
+
+                    <h1 class="text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.08] serif" style="color: var(--deep-brown);">
+                        Your Pet,<br>
+                        <span class="italic font-normal" style="color: var(--warm-orange);">Forever Captured</span><br>
+                        in 3D.
+                    </h1>
+
+                    <p class="text-xl leading-relaxed max-w-lg" style="color: rgba(74, 55, 40, 0.75);">
+                        We transform your beloved pet into a <strong style="color: var(--deep-brown);">stunning 7cm hand-painted figurine</strong>.
+                        State-of-the-art 3D printing meets artisan craftsmanship for an <em>exact replica</em> of your best friend.
+                    </p>
+
+                    <div class="flex flex-wrap items-center gap-6">
+                        <a href="#order" class="btn-primary">Create My Figurine — $129</a>
+                        <div class="flex items-center gap-2 text-sm" style="color: rgba(74, 55, 40, 0.6);">
+                            <i data-lucide="truck" class="w-4 h-4"></i>
+                            <span>Worldwide Shipping</span>
+                        </div>
+                    </div>
+
+                    <!-- Discount badge -->
+                    <div class="flex items-center gap-4 pt-2">
+                        <span class="discount-badge">
+                            <i data-lucide="percent" class="w-3 h-3"></i>
+                            15% OFF for 2+ figurines
+                        </span>
+                        <div class="flex items-center gap-2">
+                            <div class="flex">
+                                <span style="color: var(--warm-gold);">★★★★★</span>
+                            </div>
+                            <span class="text-sm" style="color: rgba(74, 55, 40, 0.6);">Happy Pet Parents</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Content - Hero Image -->
+                <div class="relative animate-float lg:pl-8">
+                    <!-- Main Image -->
+                    <div class="rounded-3xl overflow-hidden card-shadow-lg bg-white p-2" style="border: 6px solid white;">
+                        <img src="images/pomeranian-with-figurine.jpg" alt="Real Pomeranian sitting next to its 3D printed figurine" class="w-full h-auto rounded-2xl">
+                    </div>
+
+                    <!-- Polaroid overlay - WIDER for transformation -->
+                    <div class="absolute -top-2 -right-2 lg:top-4 lg:-right-6 polaroid-wide w-44 lg:w-56 z-20" style="transform: rotate(4deg);">
+                        <img src="images/cino-transformation.png" alt="Pet to figurine transformation" class="w-full h-auto object-contain rounded-sm">
+                        <p class="text-[9px] font-bold text-center mt-1 uppercase tracking-wider" style="color: #888;">The Transformation</p>
+                    </div>
+
+                    <!-- Testimonial bubble -->
+                    <div class="absolute -bottom-4 -left-4 lg:-bottom-6 lg:-left-6 bg-white rounded-2xl p-5 card-shadow gold-glow max-w-[240px] z-30">
+                        <p class="text-sm font-medium italic leading-relaxed" style="color: rgba(74, 55, 40, 0.8);">
+                            "It's really so alike! Great mini version of Voka."
+                        </p>
+                        <p class="text-xs font-semibold mt-2" style="color: var(--warm-gold);">— Jor</p>
+                    </div>
+
+                    <!-- Size badge -->
+                    <div class="absolute top-4 left-4 text-white rounded-full px-4 py-2 shadow-lg font-bold text-sm" style="background: var(--warm-gold);">
+                        7cm / 2.75"
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Transformation Showcase -->
+        <section class="py-20 bg-white px-6">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-14">
+                    <h2 class="text-4xl md:text-5xl font-bold serif mb-4" style="color: var(--deep-brown);">See the Magic</h2>
+                    <p class="text-xl max-w-2xl mx-auto" style="color: rgba(74, 55, 40, 0.6);">From photo to masterpiece — witness how we capture every detail of your pet's unique personality.</p>
+                </div>
+
+                <div class="rounded-3xl overflow-hidden card-shadow-lg p-6 md:p-10" style="background: linear-gradient(135deg, #FFFFFF 0%, #FDF9F3 100%); border: 1px solid rgba(245, 230, 211, 0.5);">
+                    <img src="images/cino-transformation.png" alt="Cino the dog transformed into a 3D figurine shown from multiple angles" class="w-full h-auto rounded-2xl">
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8 mt-14">
+                    <div class="text-center p-6">
+                        <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background: var(--soft-tan);">
+                            <i data-lucide="scan" class="w-8 h-8" style="color: var(--warm-gold);"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-2 serif" style="color: var(--deep-brown);">Every Marking</h3>
+                        <p style="color: rgba(74, 55, 40, 0.6);">Fur patterns, spots, and unique markings perfectly replicated.</p>
+                    </div>
+                    <div class="text-center p-6">
+                        <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background: var(--soft-tan);">
+                            <i data-lucide="eye" class="w-8 h-8" style="color: var(--warm-gold);"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-2 serif" style="color: var(--deep-brown);">That Look</h3>
+                        <p style="color: rgba(74, 55, 40, 0.6);">We capture the expression that makes your pet uniquely them.</p>
+                    </div>
+                    <div class="text-center p-6">
+                        <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background: var(--soft-tan);">
+                            <i data-lucide="box" class="w-8 h-8" style="color: var(--warm-gold);"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-2 serif" style="color: var(--deep-brown);">Display Ready</h3>
+                        <p style="color: rgba(74, 55, 40, 0.6);">Arrives in a crystal-clear acrylic case, ready to treasure.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section id="how" class="py-20 px-6" style="background: var(--warm-cream);">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-20">
+                    <h2 class="text-4xl md:text-5xl font-bold serif mb-4" style="color: var(--deep-brown);">The Magic Behind Pegacy</h2>
+                    <p class="text-lg max-w-2xl mx-auto" style="color: rgba(74, 55, 40, 0.6);">Our dedicated team meticulously prepares every model with love and care.</p>
+                </div>
+
+                <div class="grid md:grid-cols-4 gap-6 lg:gap-8">
+                    <!-- Step 1 -->
+                    <div class="bg-white p-8 rounded-3xl card-shadow relative group hover:-translate-y-2 transition-all" style="border: 1px solid rgba(197, 160, 89, 0.15);">
+                        <div class="absolute -top-4 left-6 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm" style="background: var(--warm-gold);">1</div>
+                        <div class="text-4xl mb-5">📸</div>
+                        <h4 class="text-xl font-bold serif mb-3" style="color: var(--deep-brown);">Share the Love</h4>
+                        <p class="text-sm leading-relaxed" style="color: rgba(74, 55, 40, 0.6);">Upload 5 photos. We study their personality, markings, and posture.</p>
+                    </div>
+
+                    <!-- Step 2 - Updated -->
+                    <div class="bg-white p-8 rounded-3xl card-shadow relative group hover:-translate-y-2 transition-all" style="border: 2px solid var(--warm-gold);">
+                        <div class="absolute -top-4 left-6 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm" style="background: var(--warm-gold);">2</div>
+                        <div class="absolute -top-3 right-4 text-white text-[9px] px-3 py-1 rounded-full font-bold uppercase tracking-wider" style="background: var(--warm-orange);">The Magic</div>
+                        <div class="text-4xl mb-5">👩‍🎨</div>
+                        <h4 class="text-xl font-bold serif mb-3" style="color: var(--deep-brown);">Awesome Modelling</h4>
+                        <p class="text-sm leading-relaxed" style="color: rgba(74, 55, 40, 0.6);">Doing our best to create the perfect online replica!</p>
+                    </div>
+
+                    <!-- Step 3 - Updated -->
+                    <div class="bg-white p-8 rounded-3xl card-shadow relative group hover:-translate-y-2 transition-all" style="border: 1px solid rgba(197, 160, 89, 0.15);">
+                        <div class="absolute -top-4 left-6 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm" style="background: var(--warm-gold);">3</div>
+                        <div class="text-4xl mb-5">✨</div>
+                        <h4 class="text-xl font-bold serif mb-3" style="color: var(--deep-brown);">State-of-the-Art Print</h4>
+                        <p class="text-sm leading-relaxed" style="color: rgba(74, 55, 40, 0.6);">Wonderful printers create your sculpture with microscopic precision.</p>
+                    </div>
+
+                    <!-- Step 4 - Highlighted -->
+                    <div class="p-8 rounded-3xl relative group hover:-translate-y-2 transition-all overflow-hidden text-white" style="background: linear-gradient(135deg, #FF9D2E 0%, #E6A15C 50%, #C5A059 100%); border: 4px solid white; box-shadow: 0 20px 50px -15px rgba(197, 160, 89, 0.4);">
+                        <span class="absolute top-3 right-4 text-xl opacity-60 sparkle-anim">✨</span>
+                        <span class="absolute bottom-8 left-8 text-lg opacity-40 sparkle-anim">✨</span>
+                        <div class="absolute -top-4 left-6 bg-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm" style="color: var(--warm-gold);">4</div>
+                        <div class="text-4xl mb-5">🖌️</div>
+                        <h4 class="text-xl font-bold serif mb-3">Hand-Finished Love</h4>
+                        <p class="text-sm leading-relaxed opacity-95">Our artists hand-paint and polish each piece to bring their spirit to life.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery -->
+        <section id="gallery" class="py-20 bg-white px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-14">
+                    <h2 class="text-4xl md:text-5xl font-bold serif mb-4" style="color: var(--deep-brown);">Real Creations</h2>
+                    <p class="text-xl max-w-2xl mx-auto" style="color: rgba(74, 55, 40, 0.6);">Every figurine tells a story. Here are some of our favorite transformations.</p>
+                </div>
+
+                <!-- Main Gallery Grid -->
+                <div class="grid md:grid-cols-3 gap-6 mb-6">
+                    <!-- Pomeranian Side by Side -->
+                    <div class="group relative rounded-3xl overflow-hidden card-shadow hover:-translate-y-2 transition-all">
+                        <img src="images/pomeranian-with-figurine.jpg" alt="Pomeranian with figurine" class="w-full h-full object-cover" style="aspect-ratio: 4/5;">
+                        <div class="absolute bottom-0 left-0 right-0 p-6" style="background: linear-gradient(to top, rgba(74, 55, 40, 0.9), transparent);">
+                            <h3 class="text-white font-bold text-xl serif">Voka's Moment</h3>
+                            <p class="text-white/80 text-xs mt-1">Pet meets mini-me</p>
+                        </div>
+                    </div>
+
+                    <!-- Golden Retriever Side View -->
+                    <div class="group relative rounded-3xl overflow-hidden card-shadow hover:-translate-y-2 transition-all">
+                        <img src="images/golden-retriever-side.jpg" alt="Golden Retriever figurine side view" class="w-full h-full object-cover" style="aspect-ratio: 4/5;">
+                        <div class="absolute bottom-0 left-0 right-0 p-6" style="background: linear-gradient(to top, rgba(74, 55, 40, 0.9), transparent);">
+                            <h3 class="text-white font-bold text-xl serif">Captured Perfectly</h3>
+                            <p class="text-white/80 text-xs mt-1">Every detail, every smile</p>
+                        </div>
+                    </div>
+
+                    <!-- Golden Retriever Front View -->
+                    <div class="group relative rounded-3xl overflow-hidden card-shadow hover:-translate-y-2 transition-all">
+                        <img src="images/golden-retriever-front.jpg" alt="Golden Retriever figurine front view" class="w-full h-full object-cover" style="aspect-ratio: 4/5;">
+                        <div class="absolute bottom-0 left-0 right-0 p-6" style="background: linear-gradient(to top, rgba(74, 55, 40, 0.9), transparent);">
+                            <h3 class="text-white font-bold text-xl serif">The Comparison</h3>
+                            <p class="text-white/80 text-xs mt-1">Photo to figurine magic</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Row - Larger Cards -->
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <!-- Cino's Journey -->
+                    <div class="group relative rounded-3xl overflow-hidden card-shadow hover:-translate-y-2 transition-all" style="background: var(--soft-tan);">
+                        <div class="grid grid-cols-1">
+                            <img src="images/cino-transformation.png" alt="Cino transformation views" class="w-full h-auto">
+                            <img src="images/cino-with-packaging.jpg" alt="Cino with Pegacy packaging" class="w-full h-auto">
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 p-8" style="background: linear-gradient(to top, rgba(74, 55, 40, 0.9), transparent);">
+                            <h3 class="text-white font-bold text-2xl serif">Cino's Journey</h3>
+                            <p class="text-white/80 text-sm mt-1">From photo to packaged masterpiece</p>
+                        </div>
+                    </div>
+
+                    <!-- Two Figurines Display -->
+                    <div class="group relative rounded-3xl overflow-hidden card-shadow hover:-translate-y-2 transition-all">
+                        <img src="images/two-figurines-display.jpg" alt="Two pet figurines in display cases" class="w-full h-full object-cover" style="min-height: 400px;">
+                        <div class="absolute bottom-0 left-0 right-0 p-8" style="background: linear-gradient(to top, rgba(74, 55, 40, 0.9), transparent);">
+                            <h3 class="text-white font-bold text-2xl serif">Display Ready</h3>
+                            <p class="text-white/80 text-sm mt-1">Crystal cases included with every order</p>
+                        </div>
+                        <!-- Badge -->
+                        <div class="absolute top-4 right-4 text-white text-xs px-3 py-1.5 rounded-full font-bold" style="background: var(--warm-gold);">
+                            Multiple Pets? 15% OFF!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call to Action Banner -->
+                <div class="rounded-3xl p-8 md:p-12 text-center" style="background: linear-gradient(135deg, var(--soft-tan) 0%, rgba(245, 230, 211, 0.5) 100%); border: 2px solid rgba(197, 160, 89, 0.2);">
+                    <p class="text-lg md:text-xl font-medium mb-4" style="color: var(--deep-brown);">Your pet could be next in our gallery!</p>
+                    <a href="#order" class="btn-gold inline-flex items-center gap-2">
+                        <span>Start Your Creation</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reviews Section - Updated -->
+        <section id="reviews" class="py-20 px-6" style="background: var(--warm-cream);">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-14">
+                    <h2 class="text-4xl md:text-5xl font-bold serif mb-4" style="color: var(--deep-brown);">What Pet Parents Say</h2>
+                    <p class="text-lg italic max-w-xl mx-auto" style="color: rgba(74, 55, 40, 0.6);">Real stories from the Pegacy family.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-12">
+                    <!-- Review 1 - Jeremy (First Customer with real photo) -->
+                    <div class="bg-white p-8 rounded-3xl card-shadow flex flex-col relative" style="border: 2px solid var(--warm-gold);">
+                        <div class="absolute -top-3 right-6 text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-widest" style="background: var(--warm-gold);">First Customer</div>
+                        <div class="flex mb-4" style="color: var(--warm-gold);">★★★★★</div>
+                        <p class="text-base leading-relaxed mb-6 italic flex-grow" style="color: rgba(74, 55, 40, 0.75);">"Pegacy is an amazing figurine service. Joel's craftsmanship is truly impressive! From the precision of the 3D moulding to the intricate details of the hand-painting process. He was also incredibly patient and gracious in accommodating my requests throughout. A well-deserved 5 stars. Highly recommended!"</p>
+                        <div class="flex items-center space-x-4 mt-auto">
+                            <img src="images/jeremy-profile.png" alt="Jeremy" class="w-12 h-12 rounded-full object-cover shadow-md" style="border: 2px solid var(--warm-gold);">
+                            <div>
+                                <p class="font-bold" style="color: var(--deep-brown);">Jeremy</p>
+                                <p class="text-[11px] uppercase tracking-widest" style="color: var(--warm-gold);">Our First Customer</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review 2 - Jor -->
+                    <div class="bg-white p-8 rounded-3xl card-shadow flex flex-col" style="border: 1px solid rgba(197, 160, 89, 0.15);">
+                        <div class="flex mb-4" style="color: var(--warm-gold);">★★★★★</div>
+                        <p class="text-lg leading-relaxed mb-8 italic flex-grow" style="color: rgba(74, 55, 40, 0.75);">"It's a piece of art. So cute and memorable!"</p>
+                        <div class="flex items-center space-x-4 mt-auto">
+                            <div class="avatar-initial" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">J</div>
+                            <div>
+                                <p class="font-bold" style="color: var(--deep-brown);">Jor</p>
+                                <p class="text-[11px] uppercase tracking-widest" style="color: var(--warm-gold);">Happy Pet Parent</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- More reviews coming soon -->
+                <div class="text-center py-12 rounded-3xl" style="background: linear-gradient(135deg, rgba(245, 230, 211, 0.3) 0%, rgba(253, 252, 248, 0.5) 100%); border: 2px dashed rgba(197, 160, 89, 0.3);">
+                    <div class="text-4xl mb-4">💬</div>
+                    <p class="text-lg font-medium serif italic" style="color: rgba(74, 55, 40, 0.5);">More reviews coming soon...</p>
+                    <p class="text-sm mt-2" style="color: rgba(74, 55, 40, 0.4);">Be part of our growing family!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing / Order Section -->
+        <section id="order" class="py-20 px-6 bg-white">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-14">
+                    <h2 class="text-4xl md:text-5xl font-bold serif mb-4" style="color: var(--deep-brown);">Create Your Figurine</h2>
+                    <p class="text-xl" style="color: rgba(74, 55, 40, 0.6);">One perfect size. Simple pricing. Endless memories.</p>
+                </div>
+
+                <!-- Pricing Card -->
+                <div class="bg-white rounded-3xl p-8 md:p-12 card-shadow-lg max-w-lg mx-auto mb-16 text-center" style="border: 2px solid rgba(197, 160, 89, 0.25);">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6" style="background: rgba(197, 160, 89, 0.1);">
+                        <i data-lucide="sparkles" class="w-4 h-4" style="color: var(--warm-gold);"></i>
+                        <span class="text-sm font-semibold" style="color: var(--warm-gold);">Premium Handcrafted</span>
+                    </div>
+
+                    <h3 class="font-bold text-3xl serif mb-2" style="color: var(--deep-brown);">7cm Pet Figurine</h3>
+                    <p class="mb-6" style="color: rgba(74, 55, 40, 0.6);">Perfect desk size with crystal display case</p>
+
+                    <div class="mb-6">
+                        <span class="text-6xl font-bold serif" style="color: var(--warm-gold);">$129</span>
+                        <p class="text-sm mt-2" style="color: rgba(74, 55, 40, 0.5);">+ $15 shipping worldwide</p>
+                    </div>
+
+                    <!-- Discount highlight -->
+                    <div class="mb-8 p-4 rounded-2xl" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border: 1px solid rgba(34, 197, 94, 0.2);">
+                        <p class="font-semibold" style="color: #16a34a;">
+                            <i data-lucide="tag" class="w-4 h-4 inline mr-1"></i>
+                            15% OFF when you order 2+ figurines!
+                        </p>
+                        <p class="text-xs mt-1" style="color: rgba(22, 163, 74, 0.7);">Perfect for multiple pets or gifting</p>
+                    </div>
+
+                    <ul class="text-left space-y-3 mb-8">
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0" style="color: var(--warm-gold);"></i>
+                            <span style="color: rgba(74, 55, 40, 0.7);">Exact replica of your pet</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0" style="color: var(--warm-gold);"></i>
+                            <span style="color: rgba(74, 55, 40, 0.7);">Hand-painted by artisans</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0" style="color: var(--warm-gold);"></i>
+                            <span style="color: rgba(74, 55, 40, 0.7);">Crystal acrylic display case</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0" style="color: var(--warm-gold);"></i>
+                            <span style="color: rgba(74, 55, 40, 0.7);">Digital proof before printing</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0" style="color: var(--warm-gold);"></i>
+                            <span style="color: rgba(74, 55, 40, 0.7);"><strong>Singapore:</strong> ~1 week delivery</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0" style="color: var(--warm-gold);"></i>
+                            <span style="color: rgba(74, 55, 40, 0.7);"><strong>Worldwide:</strong> ~2 weeks delivery</span>
+                        </li>
+                    </ul>
+
+                    <button onclick="startOrder()" class="btn-primary w-full text-center">Start Creating</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-20 px-6" style="background: var(--warm-cream);">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-14">
+                    <h2 class="text-4xl md:text-5xl font-bold serif mb-4" style="color: var(--deep-brown);">Common Questions</h2>
+                    <p class="text-xl" style="color: rgba(74, 55, 40, 0.6);">Everything you need to know about your figurine.</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="bg-white rounded-2xl p-8 card-shadow">
+                        <h3 class="font-bold text-xl serif mb-3 flex items-center gap-3" style="color: var(--deep-brown);">
+                            <i data-lucide="clock" class="w-6 h-6" style="color: var(--warm-gold);"></i>
+                            How long does it take?
+                        </h3>
+                        <p class="pl-9 leading-relaxed" style="color: rgba(74, 55, 40, 0.7);"><strong>Singapore:</strong> Approximately 1 week from order to delivery. <strong>Worldwide:</strong> About 2 weeks. You'll receive a digital proof within 48 hours for approval before we begin printing.</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-8 card-shadow">
+                        <h3 class="font-bold text-xl serif mb-3 flex items-center gap-3" style="color: var(--deep-brown);">
+                            <i data-lucide="camera" class="w-6 h-6" style="color: var(--warm-gold);"></i>
+                            What makes a good photo?
+                        </h3>
+                        <p class="pl-9 leading-relaxed" style="color: rgba(74, 55, 40, 0.7);">Clear, well-lit photos from Front, Back, Left Side, Right Side, and any unique markings. Natural light works best — avoid flash. The clearer your photos, the more detailed your figurine!</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-8 card-shadow">
+                        <h3 class="font-bold text-xl serif mb-3 flex items-center gap-3" style="color: var(--deep-brown);">
+                            <i data-lucide="ruler" class="w-6 h-6" style="color: var(--warm-gold);"></i>
+                            Why 7cm size?
+                        </h3>
+                        <p class="pl-9 leading-relaxed" style="color: rgba(74, 55, 40, 0.7);">7cm (about 2.75 inches) is the perfect balance of detail and display size. It's ideal for desks, shelves, or nightstands — small enough to be elegant, large enough to capture every detail.</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-8 card-shadow">
+                        <h3 class="font-bold text-xl serif mb-3 flex items-center gap-3" style="color: var(--deep-brown);">
+                            <i data-lucide="shield-check" class="w-6 h-6" style="color: var(--warm-gold);"></i>
+                            Is my payment secure?
+                        </h3>
+                        <p class="pl-9 leading-relaxed" style="color: rgba(74, 55, 40, 0.7);">Absolutely! We use Stripe, the same payment processor trusted by Amazon, Shopify, and millions of businesses worldwide. Your card details never touch our servers.</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-8 card-shadow">
+                        <h3 class="font-bold text-xl serif mb-3 flex items-center gap-3" style="color: var(--deep-brown);">
+                            <i data-lucide="heart" class="w-6 h-6" style="color: var(--warm-gold);"></i>
+                            Can I memorialize a pet who passed?
+                        </h3>
+                        <p class="pl-9 leading-relaxed" style="color: rgba(74, 55, 40, 0.7);">Yes, many of our customers create figurines to honor pets who are no longer with us. It's a beautiful way to keep their memory close. Just provide your clearest photos.</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-8 card-shadow">
+                        <h3 class="font-bold text-xl serif mb-3 flex items-center gap-3" style="color: var(--deep-brown);">
+                            <i data-lucide="percent" class="w-6 h-6" style="color: var(--warm-gold);"></i>
+                            What's the discount for multiple figurines?
+                        </h3>
+                        <p class="pl-9 leading-relaxed" style="color: rgba(74, 55, 40, 0.7);">Order 2 or more figurines and get <strong>15% off</strong> your entire order! Perfect if you have multiple pets or want to gift one to a friend.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-16 px-6" style="background: var(--deep-brown);">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid md:grid-cols-3 gap-12 items-start">
+                    <div>
+                        <div class="cursor-pointer inline-block">
+                            <h3 class="text-4xl font-bold serif leading-none text-white">Pegacy</h3>
+                            <p class="text-[10px] uppercase tracking-[0.4em] font-semibold opacity-70 mt-1" style="color: var(--warm-gold);">Capture Your Love</p>
+                        </div>
+                        <p class="max-w-sm opacity-70 leading-relaxed mt-6" style="color: var(--soft-tan);">
+                            State-of-the-art 3D printing meets artisan craftsmanship. Preserving the unique spirit of your best friend, forever.
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white mb-4">Contact</h4>
+                        <p class="font-semibold mb-2" style="color: var(--warm-gold);">+65 9818 0307</p>
+                        <a href="mailto:pegacysg@gmail.com" class="font-semibold hover:opacity-80 transition" style="color: var(--warm-gold);">pegacysg@gmail.com</a>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white mb-4">Legal</h4>
+                        <div class="space-y-2">
+                            <a href="privacy.html" class="block text-sm opacity-70 hover:opacity-100 transition" style="color: var(--soft-tan);">Privacy Policy</a>
+                            <a href="terms.html" class="block text-sm opacity-70 hover:opacity-100 transition" style="color: var(--soft-tan);">Terms & Conditions</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t mt-12 pt-8" style="border-color: rgba(245, 230, 211, 0.2);">
+                    <p class="text-xs text-center opacity-40" style="color: var(--soft-tan);">© 2026 Pegacy. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ==================== ORDER FLOW VIEW ==================== -->
+    <div id="order-view" class="hidden-view min-h-screen pb-20" style="background: var(--warm-cream);">
+        <!-- Order Nav -->
+        <nav class="h-20 bg-white border-b flex items-center px-6 justify-between sticky top-0 z-50" style="border-color: rgba(245, 230, 211, 0.5);">
+            <div onclick="showLanding()" class="flex flex-col cursor-pointer hover:opacity-80 transition-opacity">
+                <div class="text-2xl font-bold serif leading-none" style="color: var(--warm-gold);">Pegacy</div>
+                <div class="text-[8px] uppercase tracking-[0.2em] font-semibold opacity-70 mt-0.5" style="color: var(--warm-gold);">Capture Your Love</div>
+            </div>
+            <button onclick="showLanding()" class="flex items-center space-x-2 hover:opacity-70 transition" style="color: rgba(74, 55, 40, 0.5);">
+                <span>✕</span> <span>Cancel Order</span>
+            </button>
+        </nav>
+
+        <div class="max-w-3xl mx-auto px-6 pt-10">
+            <!-- Step Tabs -->
+            <div class="flex justify-between mb-10 text-xs font-bold uppercase tracking-widest border-b pb-4" style="color: rgba(74, 55, 40, 0.4); border-color: rgba(245, 230, 211, 0.5);">
+                <div id="step-tab-1" class="step-active pb-4">1. Upload Photos</div>
+                <div id="step-tab-2" class="pb-4">2. Your Details</div>
+                <div id="step-tab-3" class="pb-4">3. Checkout</div>
+            </div>
+
+            <!-- STEP 1: Upload Photos -->
+            <div id="order-step-1" class="space-y-8">
+                <div class="text-center space-y-2">
+                    <h2 class="text-3xl font-bold serif" style="color: var(--deep-brown);">Upload your pet's best angles</h2>
+                    <p style="color: rgba(74, 55, 40, 0.6);">For the best detail, we need 5 different pictures.</p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="photo-grid">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <div class="p-6 rounded-2xl" style="background: rgba(253, 247, 238, 1); border: 1px solid rgba(197, 160, 89, 0.2);">
+                    <h4 class="font-bold text-sm mb-3" style="color: var(--warm-gold);">💡 Photo Tips:</h4>
+                    <ul class="text-sm space-y-1 list-disc list-inside" style="color: rgba(74, 55, 40, 0.7);">
+                        <li>Front face view</li>
+                        <li>Side profile (Left & Right)</li>
+                        <li>Back view (Tail area)</li>
+                        <li>Close-up of any unique markings</li>
+                    </ul>
+                </div>
+
+                <button id="next-to-step-2" disabled class="w-full py-5 rounded-full font-bold opacity-50 cursor-not-allowed transition-all text-white" style="background: var(--deep-brown);">
+                    Continue (0/5 Photos)
+                </button>
+            </div>
+
+            <!-- STEP 2: Details -->
+            <div id="order-step-2" class="hidden-view space-y-8">
+                <div class="text-center space-y-2">
+                    <h2 class="text-3xl font-bold serif" style="color: var(--deep-brown);">Almost there!</h2>
+                    <p style="color: rgba(74, 55, 40, 0.6);">Where should we send your digital preview?</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl card-shadow space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold mb-2" style="color: var(--deep-brown);">Pet's Name</label>
+                        <input type="text" id="pet-name" placeholder="e.g. Buddy, Luna, Max" class="input-field">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2" style="color: var(--deep-brown);">Your Email Address</label>
+                        <input type="email" id="customer-email" placeholder="email@example.com" class="input-field">
+                        <p class="text-xs mt-2" style="color: rgba(74, 55, 40, 0.5);">We'll send your digital proof here for approval</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2" style="color: var(--deep-brown);">How many figurines?</label>
+                        <select id="quantity" onchange="updateOrderSummary()" class="input-field">
+                            <option value="1">1 Figurine</option>
+                            <option value="2">2 Figurines (15% OFF!)</option>
+                            <option value="3">3 Figurines (15% OFF!)</option>
+                            <option value="4">4 Figurines (15% OFF!)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2" style="color: var(--deep-brown);">Shipping Location</label>
+                        <select id="shipping-location" onchange="updateOrderSummary()" class="input-field">
+                            <option value="singapore">Singapore (~1 week) - $10</option>
+                            <option value="worldwide">Worldwide (~2 weeks) - $15</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2" style="color: var(--deep-brown);">Promo Code <span class="font-normal opacity-60">(optional)</span></label>
+                        <div class="flex gap-2">
+                            <input type="text" id="promo-code" placeholder="Enter promo code" class="input-field flex-1" style="text-transform: uppercase;">
+                            <button type="button" onclick="applyPromoCode()" id="apply-promo-btn" class="px-6 py-3 rounded-xl font-semibold text-white transition hover:opacity-90" style="background: var(--warm-gold);">Apply</button>
+                        </div>
+                        <p id="promo-message" class="text-xs mt-2 hidden"></p>
+                    </div>
+                </div>
+
+                <div class="p-6 rounded-2xl" style="background: rgba(245, 230, 211, 0.3);">
+                    <div class="flex justify-between items-center mb-3">
+                        <span style="color: rgba(74, 55, 40, 0.7);">7cm Pet Figurine × <span id="qty-display">1</span></span>
+                        <span class="font-semibold" style="color: var(--deep-brown);" id="subtotal-display">$129</span>
+                    </div>
+                    <div id="discount-row" class="flex justify-between items-center mb-3 hidden" style="color: #16a34a;">
+                        <span id="discount-label">15% Discount</span>
+                        <span class="font-semibold" id="discount-display">-$0</span>
+                    </div>
+                    <div id="promo-discount-row" class="flex justify-between items-center mb-3 hidden" style="color: #8b5cf6;">
+                        <span>Promo: <span id="promo-code-display"></span></span>
+                        <span class="font-semibold" id="promo-discount-display">-$0</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span style="color: rgba(74, 55, 40, 0.7);">Shipping</span>
+                        <span class="font-semibold" style="color: var(--deep-brown);" id="shipping-display">$10</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-3" style="border-top: 1px solid var(--soft-tan);">
+                        <span class="font-semibold" style="color: var(--deep-brown);">Total</span>
+                        <span class="font-bold text-2xl serif" style="color: var(--warm-gold);" id="total-display">$139</span>
+                    </div>
+                </div>
+
+                <div class="flex space-x-4">
+                    <button onclick="goToStep(1)" class="w-1/3 py-4 rounded-full font-bold transition" style="background: rgba(245, 230, 211, 0.5); color: rgba(74, 55, 40, 0.6);">Back</button>
+                    <button onclick="validateStep2()" class="w-2/3 py-4 rounded-full font-bold text-white transition hover:opacity-90" style="background: var(--deep-brown);">Continue to Payment</button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Payment -->
+            <div id="order-step-3" class="hidden-view space-y-8">
+                <div class="text-center space-y-2">
+                    <h2 class="text-3xl font-bold serif" style="color: var(--deep-brown);">Secure Checkout</h2>
+                    <div class="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-full" style="background: rgba(34, 197, 94, 0.1); color: #16a34a;">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i>
+                        <span>Secured by Stripe</span>
+                    </div>
+                </div>
+
+                <form id="payment-form" class="space-y-6">
+                    <div class="bg-white p-8 rounded-3xl card-shadow space-y-6">
+                        <div>
+                            <label class="block text-sm font-bold mb-3" style="color: var(--deep-brown);">Card Details</label>
+                            <div id="card-element"></div>
+                            <div id="card-errors" class="text-red-500 text-sm mt-2" role="alert"></div>
+                        </div>
+
+                        <div class="p-5 rounded-xl" style="background: rgba(245, 230, 211, 0.3);">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold" style="color: var(--deep-brown);">Total</span>
+                                <span class="font-bold text-2xl serif" style="color: var(--warm-gold);" id="final-total-display">$139</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="btn-pay" class="w-full py-5 rounded-full font-bold text-lg text-white transition hover:opacity-90 flex items-center justify-center gap-3" style="background: var(--warm-gold);">
+                            <span id="btn-pay-text">Pay $139</span>
+                            <i data-lucide="loader-2" id="btn-pay-spinner" class="w-5 h-5 loading-spinner hidden"></i>
+                        </button>
+                    </div>
+
+                    <button type="button" onclick="goToStep(2)" class="w-full text-center py-3 transition hover:opacity-70" style="color: rgba(74, 55, 40, 0.5);">
+                        ← Back to Details
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SUCCESS VIEW ==================== -->
+    <div id="success-view" class="hidden-view fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center p-6 text-center">
+        <div class="w-28 h-28 rounded-full flex items-center justify-center text-5xl mb-8" style="background: rgba(34, 197, 94, 0.15);">
+            🎨
+        </div>
+        <h2 class="text-5xl font-bold serif mb-4" style="color: var(--deep-brown);">You're all set!</h2>
+        <p class="text-xl max-w-lg mb-2" style="color: rgba(74, 55, 40, 0.6);">Order <strong id="display-order-id" style="color: var(--warm-gold);">PGC-XXXXXX</strong></p>
+        <p class="text-lg max-w-lg mb-8" style="color: rgba(74, 55, 40, 0.6);">Our team is now reviewing your photos. You'll receive a digital proof within 48 hours.</p>
+        <button onclick="showLanding()" class="btn-primary">Back to Home</button>
+    </div>
+
+    <script>
+        // =============================================
+        // CONFIGURATION
+        // =============================================
+        const CONFIG = {
+            STRIPE_PUBLISHABLE_KEY: 'pk_test_51SljSeCidFgFW2lSe8QQp8bjzQJIUTwgS5GpbmFELRBDK0v0kpYE8J1LYIiSHhaUl7NSIrpv0MCt0wgJkxGgjbX000FgqF0gS7',
+            API_BASE: '',
+            PRICE: 129,
+            SHIPPING_SG: 10,
+            SHIPPING_WORLD: 15,
+            DISCOUNT_PERCENT: 15
+        };
+
+        // =============================================
+        // STATE
+        // =============================================
+        let uploadedFiles = [];
+        let uploadedCount = 0;
+        let sessionId = null;
+        let clientSecret = null;
+        let orderId = null;
+        let stripe, cardElement;
+        let currentTotal = 139;
+        let appliedPromoCode = null;
+        let promoDiscount = 0;
+
+        // =============================================
+        // PROMO CODES (validated server-side too)
+        // =============================================
+        const PROMO_CODES = {
+            'VOKAISTHEBEST': { discount: 5, type: 'percent', description: '5% off' }
+        };
+
+        // =============================================
+        // NAVIGATION
+        // =============================================
+        function showLanding() {
+            document.getElementById('order-view').classList.add('hidden-view');
+            document.getElementById('success-view').classList.add('hidden-view');
+            document.getElementById('landing-view').classList.remove('hidden-view');
+            document.getElementById('customer-email').value = '';
+            document.getElementById('pet-name').value = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startOrder() {
+            document.getElementById('landing-view').classList.add('hidden-view');
+            document.getElementById('success-view').classList.add('hidden-view');
+            document.getElementById('order-view').classList.remove('hidden-view');
+            initPhotoGrid();
+            goToStep(1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToStep(step) {
+            document.getElementById('order-step-1').classList.add('hidden-view');
+            document.getElementById('order-step-2').classList.add('hidden-view');
+            document.getElementById('order-step-3').classList.add('hidden-view');
+            document.getElementById('step-tab-1').classList.remove('step-active');
+            document.getElementById('step-tab-2').classList.remove('step-active');
+            document.getElementById('step-tab-3').classList.remove('step-active');
+            document.getElementById('order-step-' + step).classList.remove('hidden-view');
+            document.getElementById('step-tab-' + step).classList.add('step-active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (step === 2) {
+                updateOrderSummary();
+            }
+        }
+
+        // =============================================
+        // PROMO CODE
+        // =============================================
+        function applyPromoCode() {
+            const input = document.getElementById('promo-code');
+            const message = document.getElementById('promo-message');
+            const code = input.value.trim().toUpperCase();
+
+            if (!code) {
+                showPromoMessage('Please enter a promo code', 'error');
+                return;
+            }
+
+            if (PROMO_CODES[code]) {
+                appliedPromoCode = code;
+                showPromoMessage(`Code applied: ${PROMO_CODES[code].description}`, 'success');
+                input.disabled = true;
+                document.getElementById('apply-promo-btn').textContent = 'Applied';
+                document.getElementById('apply-promo-btn').disabled = true;
+                document.getElementById('apply-promo-btn').style.background = '#16a34a';
+                updateOrderSummary();
+            } else {
+                showPromoMessage('Invalid promo code', 'error');
+                appliedPromoCode = null;
+                promoDiscount = 0;
+                updateOrderSummary();
+            }
+        }
+
+        function showPromoMessage(text, type) {
+            const message = document.getElementById('promo-message');
+            message.textContent = text;
+            message.classList.remove('hidden');
+            message.style.color = type === 'success' ? '#16a34a' : '#dc2626';
+        }
+
+        // =============================================
+        // ORDER SUMMARY
+        // =============================================
+        function updateOrderSummary() {
+            const qty = parseInt(document.getElementById('quantity').value);
+            const location = document.getElementById('shipping-location').value;
+
+            const subtotal = CONFIG.PRICE * qty;
+            const shipping = location === 'singapore' ? CONFIG.SHIPPING_SG : CONFIG.SHIPPING_WORLD;
+
+            // Quantity discount (15% for 2+)
+            let quantityDiscount = 0;
+            if (qty >= 2) {
+                quantityDiscount = Math.round(subtotal * CONFIG.DISCOUNT_PERCENT / 100);
+                document.getElementById('discount-row').classList.remove('hidden');
+                document.getElementById('discount-display').textContent = `-$${quantityDiscount}`;
+            } else {
+                document.getElementById('discount-row').classList.add('hidden');
+            }
+
+            // Promo code discount
+            promoDiscount = 0;
+            if (appliedPromoCode && PROMO_CODES[appliedPromoCode]) {
+                const promo = PROMO_CODES[appliedPromoCode];
+                const afterQuantityDiscount = subtotal - quantityDiscount;
+                if (promo.type === 'percent') {
+                    promoDiscount = Math.round(afterQuantityDiscount * promo.discount / 100);
+                }
+                document.getElementById('promo-discount-row').classList.remove('hidden');
+                document.getElementById('promo-code-display').textContent = appliedPromoCode;
+                document.getElementById('promo-discount-display').textContent = `-$${promoDiscount}`;
+            } else {
+                document.getElementById('promo-discount-row').classList.add('hidden');
+            }
+
+            currentTotal = subtotal - quantityDiscount - promoDiscount + shipping;
+
+            document.getElementById('qty-display').textContent = qty;
+            document.getElementById('subtotal-display').textContent = `$${subtotal}`;
+            document.getElementById('shipping-display').textContent = `$${shipping}`;
+            document.getElementById('total-display').textContent = `$${currentTotal}`;
+            document.getElementById('final-total-display').textContent = `$${currentTotal}`;
+            document.getElementById('btn-pay-text').textContent = `Pay $${currentTotal}`;
+        }
+
+        // =============================================
+        // PHOTO UPLOAD
+        // =============================================
+        function initPhotoGrid() {
+            const grid = document.getElementById('photo-grid');
+            grid.innerHTML = '';
+            uploadedFiles = [];
+            uploadedCount = 0;
+            updateNextButton();
+
+            for (let i = 0; i < 5; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'aspect-[3/4] border-2 border-dashed rounded-2xl flex flex-col items-center justify-center text-center p-4 cursor-pointer relative group overflow-hidden bg-white transition-all';
+                slot.style.borderColor = 'rgba(197, 160, 89, 0.3)';
+                slot.dataset.index = i;
+
+                slot.innerHTML = `
+                    <input type="file" class="hidden" accept="image/*" data-index="${i}">
+                    <div class="icon-ui space-y-1 group-hover:scale-110 transition">
+                        <span class="text-2xl">📸</span>
+                        <p class="text-[10px] font-bold uppercase" style="color: rgba(74, 55, 40, 0.4);">Photo ${i + 1}</p>
+                    </div>
+                    <img class="preview-img absolute inset-0 w-full h-full object-cover hidden">
+                    <button class="delete-btn absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center hidden z-10 hover:bg-red-600 shadow transition-colors">✕</button>
+                `;
+
+                const input = slot.querySelector('input');
+                const img = slot.querySelector('.preview-img');
+                const iconUI = slot.querySelector('.icon-ui');
+                const deleteBtn = slot.querySelector('.delete-btn');
+
+                slot.onclick = (e) => {
+                    if (!e.target.classList.contains('delete-btn') && !slot.dataset.uploaded) {
+                        input.click();
+                    }
+                };
+
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    input.value = '';
+                    img.src = '';
+                    img.classList.add('hidden');
+                    iconUI.classList.remove('hidden');
+                    deleteBtn.classList.add('hidden');
+                    slot.style.borderColor = 'rgba(197, 160, 89, 0.3)';
+                    slot.style.borderStyle = 'dashed';
+                    if (slot.dataset.uploaded) {
+                        uploadedCount--;
+                        uploadedFiles[i] = null;
+                        delete slot.dataset.uploaded;
+                        updateNextButton();
+                    }
+                };
+
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        uploadedFiles[i] = file;
+                        const reader = new FileReader();
+                        reader.onload = (re) => {
+                            img.src = re.target.result;
+                            img.classList.remove('hidden');
+                            iconUI.classList.add('hidden');
+                            deleteBtn.classList.remove('hidden');
+                            slot.style.borderColor = '#C5A059';
+                            slot.style.borderStyle = 'solid';
+                            if (!slot.dataset.uploaded) {
+                                uploadedCount++;
+                                slot.dataset.uploaded = "true";
+                                updateNextButton();
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+
+                grid.appendChild(slot);
+            }
+        }
+
+        function updateNextButton() {
+            const btn = document.getElementById('next-to-step-2');
+            if (!btn) return;
+            btn.innerText = `Continue (${uploadedCount}/5 Photos)`;
+            if (uploadedCount >= 5) {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.onclick = uploadAndProceed;
+            } else {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                btn.onclick = null;
+            }
+        }
+
+        async function uploadAndProceed() {
+            const btn = document.getElementById('next-to-step-2');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"></span> Uploading...';
+
+            try {
+                const formData = new FormData();
+                uploadedFiles.filter(f => f).forEach(file => formData.append('images', file));
+
+                const response = await fetch(`${CONFIG.API_BASE}/api/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Upload failed');
+
+                const result = await response.json();
+                sessionId = result.sessionId;
+                goToStep(2);
+            } catch (error) {
+                console.error('Upload error:', error);
+                alert('Failed to upload images. Please try again.');
+                btn.disabled = false;
+                btn.innerText = 'Continue (5/5 Photos)';
+            }
+        }
+
+        // =============================================
+        // STEP 2 VALIDATION
+        // =============================================
+        function validateStep2() {
+            const email = document.getElementById('customer-email').value;
+            const name = document.getElementById('pet-name').value;
+            if (!email || !email.includes('@')) {
+                alert("Please enter a valid email.");
+                return;
+            }
+            if (!name) {
+                alert("Please enter your pet's name.");
+                return;
+            }
+            proceedToPayment();
+        }
+
+        async function proceedToPayment() {
+            const email = document.getElementById('customer-email').value;
+            const petName = document.getElementById('pet-name').value;
+            const qty = parseInt(document.getElementById('quantity').value);
+            const shippingLocation = document.getElementById('shipping-location').value;
+
+            try {
+                const response = await fetch(`${CONFIG.API_BASE}/api/create-payment-intent`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email,
+                        petName,
+                        sessionId,
+                        quantity: qty,
+                        shippingLocation,
+                        promoCode: appliedPromoCode
+                    })
+                });
+
+                if (!response.ok) throw new Error('Failed to create payment');
+
+                const result = await response.json();
+                clientSecret = result.clientSecret;
+                orderId = result.orderId;
+
+                // Update total from server response (authoritative)
+                if (result.pricing) {
+                    currentTotal = result.pricing.total;
+                    document.getElementById('final-total-display').textContent = `$${currentTotal}`;
+                    document.getElementById('btn-pay-text').textContent = `Pay $${currentTotal}`;
+                }
+
+                goToStep(3);
+            } catch (error) {
+                console.error('Payment setup error:', error);
+                alert('Failed to setup payment. Please try again.');
+            }
+        }
+
+        // =============================================
+        // STRIPE PAYMENT
+        // =============================================
+        function initStripe() {
+            if (CONFIG.STRIPE_PUBLISHABLE_KEY.includes('YOUR_KEY')) {
+                console.warn('Stripe not configured - using demo mode');
+                return;
+            }
+
+            stripe = Stripe(CONFIG.STRIPE_PUBLISHABLE_KEY);
+            const elements = stripe.elements();
+
+            cardElement = elements.create('card', {
+                style: {
+                    base: {
+                        fontSize: '16px',
+                        fontFamily: 'Inter, sans-serif',
+                        fontWeight: '500',
+                        color: '#4A3728',
+                        '::placeholder': { color: '#a89b8c' },
+                    },
+                    invalid: { color: '#ef4444' },
+                },
+            });
+
+            cardElement.mount('#card-element');
+            cardElement.on('change', (event) => {
+                document.getElementById('card-errors').textContent = event.error ? event.error.message : '';
+            });
+
+            document.getElementById('payment-form').addEventListener('submit', handlePaymentSubmit);
+        }
+
+        async function handlePaymentSubmit(e) {
+            e.preventDefault();
+
+            if (!stripe || !cardElement) {
+                simulatePaymentSuccess();
+                return;
+            }
+
+            const btn = document.getElementById('btn-pay');
+            const btnText = document.getElementById('btn-pay-text');
+            const spinner = document.getElementById('btn-pay-spinner');
+
+            btn.disabled = true;
+            btnText.textContent = 'Processing...';
+            spinner.classList.remove('hidden');
+
+            try {
+                const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            email: document.getElementById('customer-email').value
+                        }
+                    }
+                });
+
+                if (error) {
+                    document.getElementById('card-errors').textContent = error.message;
+                    btn.disabled = false;
+                    btnText.textContent = `Pay $${currentTotal}`;
+                    spinner.classList.add('hidden');
+                } else if (paymentIntent.status === 'succeeded') {
+                    await fetch(`${CONFIG.API_BASE}/api/confirm-order`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ orderId, paymentIntentId: paymentIntent.id })
+                    });
+                    showSuccess();
+                }
+            } catch (error) {
+                console.error('Payment error:', error);
+                document.getElementById('card-errors').textContent = 'Payment failed. Please try again.';
+                btn.disabled = false;
+                btnText.textContent = `Pay $${currentTotal}`;
+                spinner.classList.add('hidden');
+            }
+        }
+
+        function simulatePaymentSuccess() {
+            const btn = document.getElementById('btn-pay');
+            const btnText = document.getElementById('btn-pay-text');
+            const spinner = document.getElementById('btn-pay-spinner');
+
+            btn.disabled = true;
+            btnText.textContent = 'Processing...';
+            spinner.classList.remove('hidden');
+
+            setTimeout(() => {
+                orderId = 'PGC-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+                showSuccess();
+            }, 2000);
+        }
+
+        function showSuccess() {
+            document.getElementById('display-order-id').textContent = orderId || 'PGC-DEMO';
+            document.getElementById('order-view').classList.add('hidden-view');
+            document.getElementById('success-view').classList.remove('hidden-view');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // =============================================
+        // INITIALIZATION
+        // =============================================
+        window.onload = () => {
+            lucide.createIcons();
+            initStripe();
+        };
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
