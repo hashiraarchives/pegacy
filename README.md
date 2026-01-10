@@ -42,10 +42,10 @@ pegacy/
 
 | Product | Price | Dimensions |
 |---------|-------|------------|
-| Premium Pet Figurine | $129 SGD | 7cm (2.75") tall |
+| Premium Pet Figurine | $99.90 SGD | 7cm (2.75") tall |
 
 **Shipping:**
-- Singapore: $10 SGD (~1 week delivery)
+- Singapore: FREE (~1 week delivery)
 - Worldwide: $30 SGD (~2 weeks delivery)
 
 **Discount:** 15% off when ordering 2+ figurines!
@@ -138,7 +138,7 @@ Before deploying, update the publishable key in `public/index.html`:
 const CONFIG = {
     STRIPE_PUBLISHABLE_KEY: 'pk_live_your_live_publishable_key',
     API_BASE: '',
-    PRICE: 129.99
+    PRICE: 99.90
 };
 ```
 
