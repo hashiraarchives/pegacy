@@ -131,13 +131,29 @@ async function sendOrderNotification(orderData, images) {
     `;
 
     try {
+        // Prepare image attachments
+        const attachments = [];
+        if (images && images.length > 0) {
+            images.forEach((img, index) => {
+                // Images are stored as base64 strings
+                const base64Data = img.buffer.replace(/^data:image\/\w+;base64,/, '');
+                attachments.push({
+                    filename: img.filename || `pet-photo-${index + 1}.jpg`,
+                    content: base64Data,
+                    encoding: 'base64',
+                    cid: `photo${index + 1}` // Content ID for inline display
+                });
+            });
+        }
+
         await emailTransporter.sendMail({
             from: `"Pegacy Orders" <${process.env.EMAIL_USER}>`,
             to: NOTIFICATION_EMAIL,
             subject: `New Order: ${orderId} - ${petName || 'Pet Figurine'} (${quantity}x)`,
-            html: emailHtml
+            html: emailHtml,
+            attachments: attachments
         });
-        console.log(`✓ Order notification email sent for ${orderId}`);
+        console.log(`✓ Order notification email sent for ${orderId} with ${attachments.length} images`);
         return true;
     } catch (error) {
         console.error('Failed to send email:', error.message);
