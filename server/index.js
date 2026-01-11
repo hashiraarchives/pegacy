@@ -256,7 +256,7 @@ function cleanupExpiredSessions() {
 // PRICING CONFIGURATION
 // ----------------------------------------
 const PRICING = {
-    BASE_PRICE: 99.90,         // $99.90 per figurine
+    BASE_PRICE: 99,            // $99 per figurine (50% OFF from $198!)
     SHIPPING_SG: 0,            // Singapore shipping - FREE
     SHIPPING_WORLD: 30,        // Worldwide shipping
     DISCOUNT_PERCENT: 15       // 15% off for 2+ figurines

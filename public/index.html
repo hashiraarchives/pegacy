@@ -301,11 +301,15 @@
                     </p>
 
                     <div class="flex flex-wrap items-center gap-6">
-                        <a href="#order" class="btn-primary">Create My Figurine — $99.90</a>
-                        <div class="flex items-center gap-2 text-sm" style="color: rgba(74, 55, 40, 0.6);">
-                            <i data-lucide="truck" class="w-4 h-4"></i>
-                            <span>Worldwide Shipping</span>
+                        <a href="#order" class="btn-primary">Create My Figurine — $99</a>
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-bold text-sm" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);">
+                            <i data-lucide="zap" class="w-4 h-4"></i>
+                            <span>50% OFF Launch Sale!</span>
                         </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm" style="color: rgba(74, 55, 40, 0.6);">
+                        <i data-lucide="truck" class="w-4 h-4"></i>
+                        <span>FREE Shipping in Singapore</span>
                     </div>
 
                     <!-- Discount badge -->
@@ -445,6 +449,21 @@
                     <p class="text-xl max-w-2xl mx-auto" style="color: rgba(74, 55, 40, 0.6);">Every figurine tells a story. Here are some of our favorite transformations.</p>
                 </div>
 
+                <!-- Featured Showcase Image -->
+                <div class="mb-16 max-w-5xl mx-auto">
+                    <div class="relative rounded-3xl overflow-hidden card-shadow-lg" style="border: 8px solid var(--soft-tan);">
+                        <img src="images/showcase-collection.jpg" alt="Collection of Pegacy pet figurines" class="w-full h-auto">
+                        <div class="absolute top-6 left-6 inline-flex items-center gap-2 px-4 py-2 rounded-full" style="background: rgba(197, 160, 89, 0.95); backdrop-filter: blur(10px);">
+                            <i data-lucide="award" class="w-4 h-4 text-white"></i>
+                            <span class="text-sm font-bold text-white">Our Premium Collection</span>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 p-8" style="background: linear-gradient(to top, rgba(74, 55, 40, 0.95), transparent); backdrop-filter: blur(5px);">
+                            <h3 class="text-white font-bold text-2xl md:text-3xl serif mb-2">Museum-Quality Display Cases</h3>
+                            <p class="text-white/90 text-sm md:text-base">Each figurine comes in a crystal-clear acrylic case that showcases your pet from every angle</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Main Gallery Grid -->
                 <div class="grid md:grid-cols-3 gap-6 mb-6">
                     <!-- Pomeranian Side by Side -->
@@ -569,7 +588,12 @@
                 </div>
 
                 <!-- Pricing Card -->
-                <div class="bg-white rounded-3xl p-8 md:p-12 card-shadow-lg max-w-lg mx-auto mb-16 text-center" style="border: 2px solid rgba(197, 160, 89, 0.25);">
+                <div class="bg-white rounded-3xl p-8 md:p-12 card-shadow-lg max-w-lg mx-auto mb-16 text-center" style="border: 2px solid rgba(197, 160, 89, 0.25); position: relative; overflow: hidden;">
+                    <!-- 50% OFF Badge -->
+                    <div style="position: absolute; top: 20px; right: -35px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 8px 50px; transform: rotate(45deg); font-weight: bold; font-size: 14px; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);">
+                        50% OFF
+                    </div>
+
                     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6" style="background: rgba(197, 160, 89, 0.1);">
                         <i data-lucide="sparkles" class="w-4 h-4" style="color: var(--warm-gold);"></i>
                         <span class="text-sm font-semibold" style="color: var(--warm-gold);">Premium Handcrafted</span>
@@ -579,8 +603,17 @@
                     <p class="mb-6" style="color: rgba(74, 55, 40, 0.6);">Perfect desk size with crystal display case</p>
 
                     <div class="mb-6">
-                        <span class="text-6xl font-bold serif" style="color: var(--warm-gold);">$99.90</span>
-                        <p class="text-sm mt-2" style="color: rgba(74, 55, 40, 0.5);">FREE shipping in Singapore, $30 worldwide</p>
+                        <div class="mb-2">
+                            <span class="text-3xl font-bold serif" style="color: rgba(74, 55, 40, 0.4); text-decoration: line-through;">$198</span>
+                        </div>
+                        <div class="flex items-center justify-center gap-3">
+                            <span class="text-6xl font-bold serif" style="color: var(--warm-gold);">$99</span>
+                            <div class="inline-flex items-center gap-1 px-3 py-1 rounded-full" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; font-weight: bold; font-size: 14px;">
+                                <i data-lucide="trending-down" class="w-4 h-4"></i>
+                                SAVE $99
+                            </div>
+                        </div>
+                        <p class="text-sm mt-3" style="color: rgba(74, 55, 40, 0.5);">FREE shipping in Singapore, $30 worldwide</p>
                     </div>
 
                     <!-- Discount highlight -->
@@ -810,7 +843,7 @@
                 <div class="p-6 rounded-2xl" style="background: rgba(245, 230, 211, 0.3);">
                     <div class="flex justify-between items-center mb-3">
                         <span style="color: rgba(74, 55, 40, 0.7);">7cm Pet Figurine × <span id="qty-display">1</span></span>
-                        <span class="font-semibold" style="color: var(--deep-brown);" id="subtotal-display">$99.90</span>
+                        <span class="font-semibold" style="color: var(--deep-brown);" id="subtotal-display">$99</span>
                     </div>
                     <div id="discount-row" class="flex justify-between items-center mb-3 hidden" style="color: #16a34a;">
                         <span id="discount-label">15% Discount</span>
@@ -937,7 +970,7 @@
         const CONFIG = {
             STRIPE_PUBLISHABLE_KEY: 'pk_live_51S8DSTDiaDYejJzmi5YX0N9yH3T1fdxHr43pEgcEScUxor3c7PDX7yJjU9amp8VEQykM3iXh1A9oKetXhOgEZzbz00jJNT7q6G',
             API_BASE: '',
-            PRICE: 99.90,
+            PRICE: 99,
             SHIPPING_SG: 0,
             SHIPPING_WORLD: 30,
             DISCOUNT_PERCENT: 15
